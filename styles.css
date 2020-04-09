@@ -1,0 +1,18 @@
+body {
+    background-color: black;
+}
+p {
+    color: white;
+    text-align: center;
+    font-size: 25px;
+}
+button {
+    background-color: #1a1a1a;
+    border: none;
+    color: white;
+    text-align: center;
+    width:49%;
+    height:100px;
+    font-size:25px;
+    display: inline;
+}
