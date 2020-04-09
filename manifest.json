@@ -3,15 +3,8 @@
   "short_name": "Catan",
   "theme_color": "#aa8900",
   "background_color": "#aa8900",
-  "display": "standalone",
+  "display": "fullscreen",
   "orientation": "portrait",
   "scope": "/",
   "start_url": "https://legoiready.github.io/licatanai"
-  "icons": [
-        {
-            "src": "icon-512x512.png",
-            "sizes": "225x225"
-            "type": "image/png"
-        }
-    ]
 }
