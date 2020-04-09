@@ -1,0 +1,10 @@
+{
+  "name": "Catan AI",
+  "short_name": "Catan",
+  "theme_color": "#aa8900",
+  "background_color": "#aa8900",
+  "display": "fullscreen",
+  "orientation": "portrait",
+  "scope": "/",
+  "start_url": "https://legoiready.github.io/licatanai"
+}
