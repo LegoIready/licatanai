@@ -31,11 +31,11 @@ function buildCity() {
                     bar3 = hand.indexOf("wheat") + 1;
                     if (hand.includes("wheat", bar3)) {
                         bar4 = hand.indexOf("wheat", bar3) + 1;
-                        hand.splice(bar0, 1);
-                        hand.splice(bar1, 1);
-                        hand.splice(bar2, 1);
-                        hand.splice(bar3, 1);
-                        hand.splice(bar4, 1);
+                        hand.splice(hand.indexOf("stone"), 1);
+                        hand.splice(hand.indexOf("stone"), 1);
+                        hand.splice(hand.indexOf("stone"), 1);
+                        hand.splice(hand.indexOf("wheat"), 1);
+                        hand.splice(hand.indexOf("wheat"), 1);
                         points += 1;
                         settlements -= 1;
                         foo.innerHTML = "<p>BUILD A CITY</p><br><button onclick='resetFoo();'>RETURN</button>";
