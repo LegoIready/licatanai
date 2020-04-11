@@ -87,14 +87,15 @@ function developmentCard() {
     } //build a year of plenty card
 } //build a random development card
 function showHand() {
-
+    document.getElementById("hand").innerHTML = '<p>'+(hand.join()).toUpperCase()+'</p>';
 }
 function endGame() {
-
+    foo.innerHTML = '<p>GAME RESULTS:<br>TOTAL POINTS: ' + points + '<br>ROADS: ' + roadsOutOfPlay + '<br>SETTLEMENTS: ' + settlements + '<br>CITIES: ' + citiesOutOfPlay + '<br>KNIGHTS: ' + knightsOutOfPlay + '<br>VICTORY CARDS: ' + victory + '<br>MONOPOLY: ' + monopolyOutOfPlay + '<br>ROAD BUILDING: ' + roadBuildingOutOfPlay + '<br>YEAR OF PLENTY: ' + yearOfPlentyOutOfPlay + '<br>LARGEST ARMY: ' + largestArmyGain.toUpperCase() + '<br>LONGEST ROAD: ' + longestRoadGain.toUpperCase() +'</p>';
+    showHand();
 }
 function startTurn() {
     if (points > 9) {
-        foo.innerHTML = '<p>I WIN<br>GAME RESULTS:<br>TOTAL POINTS: ' + points + '<br>ROADS: ' + roadsOutOfPlay + '<br>SETTLEMENTS: ' + settlements + '<br>CITIES: ' + citiesOutOfPlay + '<br>KNIGHTS: ' + knightsOutOfPlay + '<br>VICTORY CARDS: ' + victory + '<br>MONOPOLY: ' + monopolyOutOfPlay + '<br>ROAD BUILDING: ' + roadBuildingOutOfPlay + '<br>YEAR OF PLENTY: ' + yearOfPlentyOutOfPlay + '<br>LARGEST ARMY: ' + largestArmyGain.toUpperCase(); + '<br>LONGEST ROAD: ' + longestRoadGain.toUpperCase(); +'</p>';
+        foo.innerHTML = '<p>I WIN<br>GAME RESULTS:<br>TOTAL POINTS: ' + points + '<br>ROADS: ' + roadsOutOfPlay + '<br>SETTLEMENTS: ' + settlements + '<br>CITIES: ' + citiesOutOfPlay + '<br>KNIGHTS: ' + knightsOutOfPlay + '<br>VICTORY CARDS: ' + victory + '<br>MONOPOLY: ' + monopolyOutOfPlay + '<br>ROAD BUILDING: ' + roadBuildingOutOfPlay + '<br>YEAR OF PLENTY: ' + yearOfPlentyOutOfPlay + '<br>LARGEST ARMY: ' + largestArmyGain.toUpperCase() + '<br>LONGEST ROAD: ' + longestRoadGain.toUpperCase() +'</p>';
         showHand(); //show hand
     } //player wins
     else if (knights > 0) {
