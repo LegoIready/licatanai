@@ -439,7 +439,7 @@ function addCard() {
     foo.innerHTML = '<button onclick="addSheep();">SHEEP</button><button onclick="addWheat();">WHEAT</button><button onclick="addWood();">WOOD</button><button onclick="addStone();">STONE</button><button onclick="addBrick();">BRICK</button><button onclick="resetFoo();">RETURN</button>';
 }
 function loseCard() {
-    foo.innerHTML = '<button onclick="getRobbed();">ROBBERY</button><button onclick="getMobbed();">MONOPOLY</button><button onclick="resetFoo();">RETURN</button>';
+    foo.innerHTML = '<button onclick="rollSeven();resetFoo();">ROLL 7</button><button onclick="getRobbed();">ROBBERY</button><button onclick="getMobbed();">MONOPOLY</button><button onclick="resetFoo();">RETURN</button>';
 }
 function addSheep() {
     hand.push("sheep");
