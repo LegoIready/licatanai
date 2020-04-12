@@ -1,10 +1,12 @@
 var foo = document.getElementById("foo"); //html body
 var materials = ["wheat", "stone", "brick", "wood", "sheep"]; //list of possible cards
 var hand = []; //current cards
+var hexes = [];
+var hexRolls = [];
 var settlements = 1; //number of settlements
 var citiesOutOfPlay = 0; //number of cities
 var roadsOutOfPlay = 1; //number of roads
-var points = 0; //number of points
+var points = 1; //number of points
 var knights = 0; //number of knights in hand
 var knightsOutOfPlay = 0; //number of knights played
 var monopoly = 0; //number of monopoly cards in hand
@@ -38,6 +40,8 @@ var keep1 = "";
 var keep2 = "";
 var keep3 = "";
 var keep4 = "";
+var hexBar0 = 0;
+var hexBar1 = "";
 function resetFoo() {
     foo.innerHTML = '<button onclick="startTurn();">START TURN</button><button onclick="addCard();">ADD CARD</button><button onclick="loseCard();">LOSE CARD</button><button onclick="trade();">TRADE</button><button onclick="settlement();">SETTLEMENT POSSIBLE: ' + settlementPossible.toUpperCase() + '</button><button onclick="largestArmy();">LARGEST ARMY: ' + largestArmyGain.toUpperCase() + ' (' + knightsOutOfPlay + ')</button><button onclick="longestRoad();">LONGEST ROAD: ' + longestRoadGain.toUpperCase() + '</button><p>CARDS: ' + hand.length + '</p>';
     document.getElementById("endGame").innerHTML = '<button onclick="endGame();">END GAME</button>';
@@ -111,8 +115,6 @@ function endGame() {
     showHand();
     document.getElementById("endGame").innerHTML = '<button onclick="resetFoo();">RETURN</button>';
 }
-
-//vvv needCard for smart functions
 function needCard() {
     bar0 = 0;
     bar1 = "";
@@ -262,7 +264,6 @@ function needCard() {
     keep3 = "";
     keep4 = "";
 }
-
 function keepCard(card) {
     return card == keep0 || card == keep1 || card == keep2 || card == keep3 || card == keep4;
 }
@@ -274,33 +275,43 @@ function startTurn() {
         turnBar2 = 0;
         if (turnBar0 > 0 && turnBar0 < 2) {
             foo.innerHTML = '<p>ROLL A 2</p><button onclick="startTurn();">NEXT</button><button onclick="resetFoo();">RETURN</button>';
+            hexEval(2);
         }
         if (turnBar0 > 1 && turnBar0 < 3) {
             foo.innerHTML = '<p>ROLL A 12</p><button onclick="startTurn();">NEXT</button><button onclick="resetFoo();">RETURN</button>';
+            hexEval(12);
         }
         if (turnBar0 > 2 && turnBar0 < 5) {
             foo.innerHTML = '<p>ROLL A 3</p><button onclick="startTurn();">NEXT</button><button onclick="resetFoo();">RETURN</button>';
+            hexEval(3);
         }
         if (turnBar0 > 4 && turnBar0 < 7) {
             foo.innerHTML = '<p>ROLL AN 11</p><button onclick="startTurn();">NEXT</button><button onclick="resetFoo();">RETURN</button>';
+            hexEval(11);
         }
         if (turnBar0 > 6 && turnBar0 < 10) {
             foo.innerHTML = '<p>ROLL A 4</p><button onclick="startTurn();">NEXT</button><button onclick="resetFoo();">RETURN</button>';
+            hexEval(4);
         }
         if (turnBar0 > 9 && turnBar0 < 13) {
             foo.innerHTML = '<p>ROLL A 10</p><button onclick="startTurn();">NEXT</button><button onclick="resetFoo();">RETURN</button>';
+            hexEval(10);
         }
         if (turnBar0 > 12 && turnBar0 < 17) {
             foo.innerHTML = '<p>ROLL A 5</p><button onclick="startTurn();">NEXT</button><button onclick="resetFoo();">RETURN</button>';
+            hexEval(5);
         }
         if (turnBar0 > 16 && turnBar0 < 21) {
             foo.innerHTML = '<p>ROLL A 9</p><button onclick="startTurn();">NEXT</button><button onclick="resetFoo();">RETURN</button>';
+            hexEval(9);
         }
         if (turnBar0 > 20 && turnBar0 < 26) {
             foo.innerHTML = '<p>ROLL A 6</p><button onclick="startTurn();">NEXT</button><button onclick="resetFoo();">RETURN</button>';
+            hexEval(6);
         }
         if (turnBar0 > 25 && turnBar0 < 31) {
             foo.innerHTML = '<p>ROLL AN 8</p><button onclick="startTurn();">NEXT</button><button onclick="resetFoo();">RETURN</button>';
+            hexEval(8);
         }
         if (turnBar0 > 30 && turnBar0 < 37) {
             foo.innerHTML = '<p>ROLL A 7</p><button onclick="rollSeven();rob();">NEXT</button><button onclick="resetFoo();">RETURN</button>';
@@ -406,7 +417,7 @@ function startTurn() {
             cityBar0 = 0;
             return;
         }
-        if (roadsOutOfPlay < 16 && hand.includes("brick") && hand.includes("wood")) {
+        if (roadsOutOfPlay < 16 && settlementPossible == "no" && hand.includes("brick") && hand.includes("wood")) {
             hand.splice(hand.indexOf("brick"), 1); //remove brick
             hand.splice(hand.indexOf("wood"), 1); //remove wood
             roadsOutOfPlay += 1; //add a road
@@ -436,7 +447,27 @@ function startTurn() {
     }
 }
 function addCard() {
-    foo.innerHTML = '<button onclick="addSheep();">SHEEP</button><button onclick="addWheat();">WHEAT</button><button onclick="addWood();">WOOD</button><button onclick="addStone();">STONE</button><button onclick="addBrick();">BRICK</button><button onclick="resetFoo();">RETURN</button>';
+    foo.innerHTML = '<button onclick="hexEval(2);resetFoo();">2</button><button onclick="hexEval(3);resetFoo();">3</button><button onclick="hexEval(4);resetFoo();">4</button><button onclick="hexEval(5);resetFoo();">5</button><button onclick="hexEval(6);resetFoo();">6</button><button onclick="hexEval(8);resetFoo();">8</button><button onclick="hexEval(9);resetFoo();">9</button><button onclick="hexEval(10);resetFoo();">10</button><button onclick="hexEval(11);resetFoo();">11</button><button onclick="hexEval(12);resetFoo();">12</button><button onclick="addHex();">ADD HEX</button><button onclick="resetFoo();">RETURN</button>';
+}
+function hexEval(hex) {
+    if (hexRolls.includes(hex)) {
+        bar0 = hexRolls.indexOf(hex);
+    }
+    else {
+        return;
+    }
+    while (hexRolls.includes(hex, bar0) && bar0 < hexRolls.length) {
+        hand.push(hexes[bar0]);
+        if (bar0 + 1 < hexRolls.length) {
+            bar0 = hexRolls.indexOf(hex, bar0 + 1);
+        }
+        else {
+            break;
+        }
+    }
+}
+function addHex() {
+    foo.innerHTML = '<div id="hexNumber"><p>NUMBER:</p></div><button onclick="hexBar0=2;document.getElementById(\'hexNumber\').innerHTML=\'<p>NUMBER: 2</p>\';">2</button><button onclick="hexBar0=3;document.getElementById(\'hexNumber\').innerHTML=\'<p>NUMBER: 3</p>\';">3</button><button onclick="hexBar0=4;document.getElementById(\'hexNumber\').innerHTML=\'<p>NUMBER: 4</p>\';">4</button><button onclick="hexBar0=5;document.getElementById(\'hexNumber\').innerHTML=\'<p>NUMBER: 5</p>\';">5</button><button onclick="hexBar0=6;document.getElementById(\'hexNumber\').innerHTML=\'<p>NUMBER: 6</p>\';">6</button><button onclick="hexBar0=8;document.getElementById(\'hexNumber\').innerHTML=\'<p>NUMBER: 8</p>\';">8</button><button onclick="hexBar0=9;document.getElementById(\'hexNumber\').innerHTML=\'<p>NUMBER: 9</p>\';">9</button><button onclick="hexBar0=10;document.getElementById(\'hexNumber\').innerHTML=\'<p>NUMBER: 10</p>\';">10</button><button onclick="hexBar0=11;document.getElementById(\'hexNumber\').innerHTML=\'<p>NUMBER: 11</p>\';">11</button><button onclick="hexBar0=12;document.getElementById(\'hexNumber\').innerHTML=\'<p>NUMBER: 12</p>\';">12</button><div id="hexMaterial"><p>MATERIAL:</div><button onclick="hexBar1=\'sheep\';document.getElementById(\'hexMaterial\').innerHTML=\'<p>MATERIAL: SHEEP</p>\';">SHEEP</button><button onclick="hexBar1=\'wheat\';document.getElementById(\'hexMaterial\').innerHTML=\'<p>MATERIAL: WHEAT</p>\';">WHEAT</button><button onclick="hexBar1=\'wood\';document.getElementById(\'hexMaterial\').innerHTML=\'<p>MATERIAL: WOOD</p>\';">WOOD</button><button onclick="hexBar1=\'stone\';document.getElementById(\'hexMaterial\').innerHTML=\'<p>MATERIAL: STONE</p>\';">STONE</button><button onclick="hexBar1=\'brick\';document.getElementById(\'hexMaterial\').innerHTML=\'<p>MATERIAL: BRICK</p>\';">BRICK</button><button onclick="if(hexBar0!=0&&hexBar1!=\'\'){hexes.push(hexBar1);hexRolls.push(hexBar0);hexBar0=0;hexBar1=\'\';resetFoo();}">ADD</button><button onclick="resetFoo();">RETURN</button>';
 }
 function loseCard() {
     foo.innerHTML = '<button onclick="rollSeven();resetFoo();">ROLL 7</button><button onclick="getRobbed();">ROBBERY</button><button onclick="getMobbed();">MONOPOLY</button><button onclick="resetFoo();">RETURN</button>';
@@ -504,80 +535,11 @@ function youGet(material) {
     document.getElementById("youGet").innerHTML = '<p>YOU GET: '+material.toUpperCase()+'</p>';
 } //update card type output
 function finishTrade() {
-    bar0 = 0;
-    bar1 = 0;
-    bar2 = 0;
-    bar3 = 0;
-    bar4 = 0;
-    bar5 = 0;
     if (hand.includes(theyGet)) {
-        if (hand.includes("stone")) {
-            bar0 += 1;
-            bar2 = hand.indexOf("stone") + 1;
-        }
-        if (hand.includes("stone", bar2)) {
-            bar0 += 1;
-            bar3 = hand.indexOf("stone", bar2) + 1;
-        }
-        if (hand.includes("stone", bar3)) {
-            bar0 += 1;
-            bar4 = hand.indexOf("stone", bar3) + 1;
-        }
-        if (hand.includes("wheat")) {
-            bar0 += 1;
-            bar5 = hand.indexOf("wheat") + 1;
-        }
-        if (hand.includes("wheat", bar5)) {
-            bar0 += 1;
-        }
-        if (bar0 > 3 && settlements > 0 && (hand.includes(theyGive) || (theyGive != "stone" && theyGive != "wheat"))) {
+        if (needCard() && (theyGive != needCard() || theyGet == keep0 || theyGet == keep1 || theyGet == keep2 || theyGet == keep3 || theyGet == keep4)) {
             foo.innerHTML = '<p>I WILL NOT TRADE THAT</p><button onclick="resetFoo();">RETURN</button>';
-            bar1 = 1;
         }
-        bar0 = 0;
-        if (!hand.includes("wheat")) {
-            bar0 += 1;
-        }
-        if (!hand.includes("sheep")) {
-            bar0 += 1;
-        }
-        if (!hand.includes("brick")) {
-            bar0 += 1;
-        }
-        if (!hand.includes("wood")) {
-            bar0 += 1;
-        }
-        if (bar0 < 2 && settlementPossible == "yes" && (hand.includes(theyGive) || (theyGive != "brick" && theyGive != "wood" && theyGive != "sheep" && theyGive != "wheat"))) {
-            foo.innerHTML = '<p>I WILL NOT TRADE THAT</p><button onclick="resetFoo();">RETURN</button>';
-            bar1 = 1;
-        }
-        bar0 = 0;
-        if (!hand.includes("brick")) {
-            bar0 += 1;
-        }
-        if (!hand.includes("wood")) {
-            bar0 += 1;
-        }
-        if (bar0 < 2 && settlementPossible == "no" && (hand.includes(theyGive) || (theyGive != "brick" && theyGive != "wood"))) {
-            foo.innerHTML = '<p>I WILL NOT TRADE THAT</p><button onclick="resetFoo();">RETURN</button>';
-            bar1 = 1;
-        }
-        bar0 = 0;
-        if (!hand.includes("wheat")) {
-            bar0 += 1;
-        }
-        if (!hand.includes("sheep")) {
-            bar0 += 1;
-        }
-        if (!hand.includes("stone")) {
-            bar0 += 1;
-        }
-        if (bar0 < 2 && (hand.includes(theyGive) || (theyGive != "wheat" && theyGive != "sheep" && theyGive != "stone"))) {
-            foo.innerHTML = '<p>I WILL NOT TRADE THAT</p><button onclick="resetFoo();">RETURN</button>';
-            bar1 = 1;
-        }
-        bar0 = 0;
-        if (bar1 == 0) {
+        else {
             hand.splice(hand.indexOf(theyGet), 1); //remove output from hand
             hand.push(theyGive); //add input to hand
             foo.innerHTML = '<div><p>YOU GAVE: ' + theyGive.toUpperCase() + '</p></div><div><p>YOU GOT: ' + theyGet.toUpperCase() + '</p><button onclick="resetFoo();">RETURN</button></div>';
