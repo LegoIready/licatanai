@@ -340,6 +340,7 @@ function startTurn() {
             } //use a monopoly card
             if (roadBuilding > 0) {
                 foo.innerHTML = '<p>PLAY ROAD BUIILDING</p><button onclick="startTurn();">NEXT</button><button onclick="resetFoo();">RETURN</button>';
+                roadsOutOfPlay += 2;
                 roadBuilding -= 1; //remove a road building card from hand
                 roadBuildingOutOfPlay += 1; //expend a road building card
                 return;
