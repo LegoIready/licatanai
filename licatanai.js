@@ -1,8 +1,16 @@
 var foo = document.getElementById("foo"); //html body
-var materials = ["wheat", "stone", "brick", "wood", "sheep"]; //list of possible cards
+var materials = ["sheep", "wheat", "wood", "stone", "brick"]; //list of possible cards
 var hand = []; //current cards
 var hexes = [];
 var hexRolls = [];
+var hexType = [];
+var hexRob = [];
+var toPort = 0;
+var sheepPort = 0;
+var wheatPort = 0;
+var woodPort = 0;
+var stonePort = 0;
+var brickPort = 0;
 var settlements = 1; //number of settlements
 var citiesOutOfPlay = 0; //number of cities
 var roadsOutOfPlay = 1; //number of roads
@@ -42,10 +50,17 @@ var keep3 = "";
 var keep4 = "";
 var hexBar0 = 0;
 var hexBar1 = "";
+var hexBar2 = 0;
+var hexBar3 = 0;
 function resetFoo() {
-    foo.innerHTML = '<button onclick="startTurn();">START TURN</button><button onclick="addCard();">ADD CARD</button><button onclick="loseCard();">LOSE CARD</button><button onclick="trade();">TRADE</button><button onclick="settlement();">SETTLEMENT POSSIBLE: ' + settlementPossible.toUpperCase() + '</button><button onclick="largestArmy();">LARGEST ARMY: ' + largestArmyGain.toUpperCase() + ' (' + knightsOutOfPlay + ')</button><button onclick="longestRoad();">LONGEST ROAD: ' + longestRoadGain.toUpperCase() + '</button><p>CARDS: ' + hand.length + '</p>';
+    foo.innerHTML = '<button onclick="startTurn();">START TURN</button><button onclick="addCard();">ADD CARD</button><button onclick="loseCard();">LOSE CARD</button><button onclick="listHex();">HEXES</button><button onclick="listPorts();">PORTS</button><button onclick="trade();">TRADE</button><button onclick="settlement();">SETTLEMENT POSSIBLE: ' + settlementPossible.toUpperCase() + '</button><button onclick="largestArmy();">LARGEST ARMY: ' + largestArmyGain.toUpperCase() + ' (' + knightsOutOfPlay + ')</button><button onclick="longestRoad();">LONGEST ROAD: ' + longestRoadGain.toUpperCase() + '</button><p>CARDS: ' + hand.length + '</p>';
     document.getElementById("endGame").innerHTML = '<button onclick="endGame();">END GAME</button>';
     turnBar1 = 0;
+    keep0 = "";
+    keep1 = "";
+    keep2 = "";
+    keep3 = "";
+    keep4 = "";
 } //reset body to default
 function resetMonopoly() {
     while (monopolyBar2.length < monopolyBar0) {
@@ -356,31 +371,38 @@ function startTurn() {
                 return;
             } //use a year of plenty card
         }
+        needCard();
+        bar13 = needCard();
         bar1 = 0;
         tradeInBar2 = "";
         bar3 = 0;
         bar4 = "";
-        for (i = 0; i < materials.length; i++) {
+        bar12 = 0;
+        for (i = 0; i < materials.length && bar12 == 0; i++) {
             bar0 = materials[i];
-            while (hand.includes(bar0)&&bar3<4) {
-                bar1 += 1;
-                hand.splice(hand.indexOf(bar0), 1);
-                bar3 += 1;
-            }
-            if (bar1 < 4) {
-                bar1 = 0;
-                while (bar3 > 0) {
-                    hand.push(bar0);
-                    bar3 -= 1;
+            if (bar0 != bar13 && keepCard(bar0) == false) {
+                while (hand.includes(bar0) && bar3 < 4) {
+                    bar1 += 1;
+                    hand.splice(hand.indexOf(bar0), 1);
+                    bar3 += 1;
                 }
-            }
-            else {
-                tradeInBar2 = materials[i];
-                break;
+                if (bar1 < 4) {
+                    bar1 = 0;
+                    while (bar3 > 0) {
+                        hand.push(bar0);
+                        bar3 -= 1;
+                    }
+                }
+                else {
+                    tradeInBar2 = materials[i];
+                    bar12 = 1;
+                    break;
+                }
             }
         }
         if (tradeInBar2 != "") {
-            if (!needCard()) {
+            turnBar3 = 1;
+            if (!bar13) {
                 do {
                     bar4 = materials[Math.floor(Math.random() * materials.length)];
                 }
@@ -389,10 +411,9 @@ function startTurn() {
                 foo.innerHTML = '<p>TRADE IN 4 ' + tradeInBar2.toUpperCase() + ' FOR ' + bar4.toUpperCase() + '</p><button onclick=\"startTurn();\">NEXT</button><button onclick="resetFoo();">RETURN</button>';
                 return;
             }
-            else {
-                bar4 = needCard();
-                hand.push(bar4);
-                foo.innerHTML = '<p>TRADE IN 4 ' + tradeInBar2.toUpperCase() + ' FOR ' + bar4.toUpperCase() + '</p><button onclick=\"startTurn();\">NEXT</button><button onclick="resetFoo();">RETURN</button>';
+            else if (bar13 && bar13 != tradeInBar2 && tradeInBar2 != keep0 && tradeInBar2 != keep1 && tradeInBar2 != keep2 && tradeInBar2 != keep3 && tradeInBar2 != keep4) {
+                hand.push(bar13);
+                foo.innerHTML = '<p>TRADE IN 4 ' + tradeInBar2.toUpperCase() + ' FOR ' + bar13.toUpperCase() + '</p><button onclick=\"startTurn();\">NEXT</button><button onclick="resetFoo();">RETURN</button>';
                 return;
             }
         }
@@ -443,12 +464,16 @@ function startTurn() {
             foo.innerHTML = '<p>I WILL GIVE ' + bar5.toUpperCase() + ' FOR ' + bar6.toUpperCase() + '</p><button onclick="hand.splice(hand.indexOf(bar5),1);hand.push(bar6);startTurn();">YES</button><button onclick="turnBar2=1;startTurn();">NO</button><button onclick="resetFoo();">RETURN</button>';
             return;
         }
-        turnBar1 = 0;
+        keep0 = "";
+        keep1 = "";
+        keep2 = "";
+        keep3 = "";
+        keep4 = "";
         resetFoo();
     }
 }
 function addCard() {
-    foo.innerHTML = '<button onclick="hexEval(2);resetFoo();">2</button><button onclick="hexEval(3);resetFoo();">3</button><button onclick="hexEval(4);resetFoo();">4</button><button onclick="hexEval(5);resetFoo();">5</button><button onclick="hexEval(6);resetFoo();">6</button><button onclick="hexEval(8);resetFoo();">8</button><button onclick="hexEval(9);resetFoo();">9</button><button onclick="hexEval(10);resetFoo();">10</button><button onclick="hexEval(11);resetFoo();">11</button><button onclick="hexEval(12);resetFoo();">12</button><button onclick="addHex();">ADD HEX</button><button onclick="resetFoo();">RETURN</button>';
+    foo.innerHTML = '<button onclick="hexEval(2);resetFoo();">2</button><button onclick="hexEval(3);resetFoo();">3</button><button onclick="hexEval(4);resetFoo();">4</button><button onclick="hexEval(5);resetFoo();">5</button><button onclick="hexEval(6);resetFoo();">6</button><button onclick="hexEval(8);resetFoo();">8</button><button onclick="hexEval(9);resetFoo();">9</button><button onclick="hexEval(10);resetFoo();">10</button><button onclick="hexEval(11);resetFoo();">11</button><button onclick="hexEval(12);resetFoo();">12</button><button onclick="resetFoo();">RETURN</button>';
 }
 function hexEval(hex) {
     if (hexRolls.includes(hex)) {
@@ -457,18 +482,113 @@ function hexEval(hex) {
     else {
         return;
     }
-    while (hexRolls.includes(hex, bar0) && bar0 < hexRolls.length) {
-        hand.push(hexes[bar0]);
-        if (bar0 + 1 < hexRolls.length) {
-            bar0 = hexRolls.indexOf(hex, bar0 + 1);
+    if (hexRob[bar0] == 0) {
+        if (hexType[bar0] == 0) {
+            hand.push(hexes[bar0]);
         }
-        else {
-            break;
+        else if (hexType[bar0] == 1) {
+            hand.push(hexes[bar0]);
+            hand.push(hexes[bar0]);
+        }
+    }
+    if (bar0 + 1 < hexRolls.length) {
+        bar0 = hexRolls.indexOf(hex, bar0 + 1);
+    }
+    else {
+        return;
+    }
+    if (hexRob[bar0] == 0) {
+        if (hexType[bar0] == 0) {
+            hand.push(hexes[bar0]);
+        }
+        else if (hexType[bar0] == 1) {
+            hand.push(hexes[bar0]);
+            hand.push(hexes[bar0]);
         }
     }
 }
 function addHex() {
-    foo.innerHTML = '<div id="hexNumber"><p>NUMBER:</p></div><button onclick="hexBar0=2;document.getElementById(\'hexNumber\').innerHTML=\'<p>NUMBER: 2</p>\';">2</button><button onclick="hexBar0=3;document.getElementById(\'hexNumber\').innerHTML=\'<p>NUMBER: 3</p>\';">3</button><button onclick="hexBar0=4;document.getElementById(\'hexNumber\').innerHTML=\'<p>NUMBER: 4</p>\';">4</button><button onclick="hexBar0=5;document.getElementById(\'hexNumber\').innerHTML=\'<p>NUMBER: 5</p>\';">5</button><button onclick="hexBar0=6;document.getElementById(\'hexNumber\').innerHTML=\'<p>NUMBER: 6</p>\';">6</button><button onclick="hexBar0=8;document.getElementById(\'hexNumber\').innerHTML=\'<p>NUMBER: 8</p>\';">8</button><button onclick="hexBar0=9;document.getElementById(\'hexNumber\').innerHTML=\'<p>NUMBER: 9</p>\';">9</button><button onclick="hexBar0=10;document.getElementById(\'hexNumber\').innerHTML=\'<p>NUMBER: 10</p>\';">10</button><button onclick="hexBar0=11;document.getElementById(\'hexNumber\').innerHTML=\'<p>NUMBER: 11</p>\';">11</button><button onclick="hexBar0=12;document.getElementById(\'hexNumber\').innerHTML=\'<p>NUMBER: 12</p>\';">12</button><div id="hexMaterial"><p>MATERIAL:</div><button onclick="hexBar1=\'sheep\';document.getElementById(\'hexMaterial\').innerHTML=\'<p>MATERIAL: SHEEP</p>\';">SHEEP</button><button onclick="hexBar1=\'wheat\';document.getElementById(\'hexMaterial\').innerHTML=\'<p>MATERIAL: WHEAT</p>\';">WHEAT</button><button onclick="hexBar1=\'wood\';document.getElementById(\'hexMaterial\').innerHTML=\'<p>MATERIAL: WOOD</p>\';">WOOD</button><button onclick="hexBar1=\'stone\';document.getElementById(\'hexMaterial\').innerHTML=\'<p>MATERIAL: STONE</p>\';">STONE</button><button onclick="hexBar1=\'brick\';document.getElementById(\'hexMaterial\').innerHTML=\'<p>MATERIAL: BRICK</p>\';">BRICK</button><button onclick="if(hexBar0!=0&&hexBar1!=\'\'){hexes.push(hexBar1);hexRolls.push(hexBar0);hexBar0=0;hexBar1=\'\';resetFoo();}">ADD</button><button onclick="resetFoo();">RETURN</button>';
+    foo.innerHTML = '<div id="hexNumber"><p>NUMBER:</p></div><button onclick="hexBar0=2;document.getElementById(\'hexNumber\').innerHTML=\'<p>NUMBER: 2</p>\';">2</button><button onclick="hexBar0=3;document.getElementById(\'hexNumber\').innerHTML=\'<p>NUMBER: 3</p>\';">3</button><button onclick="hexBar0=4;document.getElementById(\'hexNumber\').innerHTML=\'<p>NUMBER: 4</p>\';">4</button><button onclick="hexBar0=5;document.getElementById(\'hexNumber\').innerHTML=\'<p>NUMBER: 5</p>\';">5</button><button onclick="hexBar0=6;document.getElementById(\'hexNumber\').innerHTML=\'<p>NUMBER: 6</p>\';">6</button><button onclick="hexBar0=8;document.getElementById(\'hexNumber\').innerHTML=\'<p>NUMBER: 8</p>\';">8</button><button onclick="hexBar0=9;document.getElementById(\'hexNumber\').innerHTML=\'<p>NUMBER: 9</p>\';">9</button><button onclick="hexBar0=10;document.getElementById(\'hexNumber\').innerHTML=\'<p>NUMBER: 10</p>\';">10</button><button onclick="hexBar0=11;document.getElementById(\'hexNumber\').innerHTML=\'<p>NUMBER: 11</p>\';">11</button><button onclick="hexBar0=12;document.getElementById(\'hexNumber\').innerHTML=\'<p>NUMBER: 12</p>\';">12</button><div id="hexMaterial"><p>MATERIAL:</div><button onclick="hexBar1=\'sheep\';document.getElementById(\'hexMaterial\').innerHTML=\'<p>MATERIAL: SHEEP</p>\';">SHEEP</button><button onclick="hexBar1=\'wheat\';document.getElementById(\'hexMaterial\').innerHTML=\'<p>MATERIAL: WHEAT</p>\';">WHEAT</button><button onclick="hexBar1=\'wood\';document.getElementById(\'hexMaterial\').innerHTML=\'<p>MATERIAL: WOOD</p>\';">WOOD</button><button onclick="hexBar1=\'stone\';document.getElementById(\'hexMaterial\').innerHTML=\'<p>MATERIAL: STONE</p>\';">STONE</button><button onclick="hexBar1=\'brick\';document.getElementById(\'hexMaterial\').innerHTML=\'<p>MATERIAL: BRICK</p>\';">BRICK</button><button onclick="if(hexBar0!=0&&hexBar1!=\'\'){hexes.push(hexBar1);hexRolls.push(hexBar0);hexType.push(0);hexRob.push(0);hexBar0=0;hexBar1=\'\';resetFoo();}">ADD</button><button onclick="resetFoo();">RETURN</button>';
+}
+function listHex() {
+    foo.innerHTML = '';
+    for (i = 0; i < hexes.length; i++) {
+        bar0 = "";
+        bar0 += '<button ';
+        if (hexRob[i] == 1) {
+            bar0 += 'class="robbed" ';
+        }
+        else if (hexType[i] == 1) {
+            bar0 += 'class="city" ';
+        }
+        bar0 += 'onclick="modHex(' + i + ')">' + hexes[i].toUpperCase() + ' AT ' + hexRolls[i] + '</button>';
+        foo.innerHTML += bar0;
+    }
+    foo.innerHTML += '<button onclick="addHex();">ADD HEX</button><button onclick="resetFoo();">RETURN</button>';
+}
+function modHex(hex) {
+    bar0 = '<button onclick="';
+    if (hexType[hex] == 0) {
+        bar0 += 'hexType[' + hex + ']=1;modHex(' + hex + ');">CITY: NO</button>';
+    }
+    else if (hexType[hex] == 1) {
+        bar0 += 'hexType[' + hex + ']=0;modHex(' + hex + ');">CITY: YES</button>';
+    }
+    bar0 += '<button onclick="';
+    if (hexRob[hex] == 0) {
+        bar0 += 'hexRob[' + hex + ']=1;modHex(' + hex + ');">ROBBED: NO</button>';
+    }
+    else if (hexRob[hex] == 1) {
+        bar0 += 'hexRob[' + hex + ']=0;modHex(' + hex + ');">ROBBED: YES</button>';
+    }
+    bar0 += '<button onclick="listHex();">RETURN</button>';
+    foo.innerHTML = bar0;
+}
+function listPorts() {
+    bar0 = '<button onclick="';
+    if (toPort == 0) {
+        bar0 += 'toPort=1;listPorts();">3:1 PORT: NO</button>';
+    }
+    else if (toPort == 1) {
+        bar0 += 'toPort=0;listPorts();">3:1 PORT: YES</button>';
+    }
+    bar0 += '<button onclick="';
+    if (sheepPort == 0) {
+        bar0 += 'sheepPort=1;listPorts();">SHEEP PORT: NO</button>';
+    }
+    else if (sheepPort == 1) {
+        bar0 += 'sheepPort=0;listPorts();">SHEEP PORT: YES</button>';
+    }
+    bar0 += '<button onclick="';
+    if (wheatPort == 0) {
+        bar0 += 'wheatPort=1;listPorts();">WHEAT PORT: NO</button>';
+    }
+    else if (wheatPort == 1) {
+        bar0 += 'wheatPort=0;listPorts();">WHEAT PORT: YES</button>';
+    }
+    bar0 += '<button onclick="';
+    if (woodPort == 0) {
+        bar0 += 'woodPort=1;listPorts();">WOOD PORT: NO</button>';
+    }
+    else if (woodPort == 1) {
+        bar0 += 'woodPort=0;listPorts();">WOOD PORT: YES</button>';
+    }
+    bar0 += '<button onclick="';
+    if (stonePort == 0) {
+        bar0 += 'stonePort=1;listPorts();">STONE PORT: NO</button>';
+    }
+    else if (stonePort == 1) {
+        bar0 += 'stonePort=0;listPorts();">STONE PORT: YES</button>';
+    }
+    bar0 += '<button onclick="';
+    if (brickPort == 0) {
+        bar0 += 'brickPort=1;listPorts();">BRICK PORT: NO</button>';
+    }
+    else if (brickPort == 1) {
+        bar0 += 'brickPort=0;listPorts();">BRICK PORT: YES</button>';
+    }
+    bar0 += '<button onclick="resetFoo();">RETURN</button>';
+    foo.innerHTML = bar0;
 }
 function loseCard() {
     foo.innerHTML = '<button onclick="rollSeven();resetFoo();">ROLL 7</button><button onclick="getRobbed();">ROBBERY</button><button onclick="getMobbed();">MONOPOLY</button><button onclick="resetFoo();">RETURN</button>';
@@ -567,9 +687,7 @@ function rollSeven() {
         }
     }
     if (hand.every(keepCard) == true) {
-        console.log("c");
         while (bar1 < bar0) {
-            console.log("d");
             bar2 = Math.floor(Math.random() * hand.length);
             hand.splice(bar2, 1);
             bar1 += 1;
