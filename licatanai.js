@@ -1,16 +1,16 @@
-var foo = document.getElementById("foo"); //html body
+var foo = document.getElementById("foo"); //html main div
 var materials = ["sheep", "wheat", "wood", "stone", "brick"]; //list of possible cards
 var hand = []; //current cards
-var hexes = [];
-var hexRolls = [];
-var hexType = [];
-var hexRob = [];
-var toPort = 0;
-var sheepPort = 0;
-var wheatPort = 0;
-var woodPort = 0;
-var stonePort = 0;
-var brickPort = 0;
+var hexes = []; //type of card from each hex
+var hexRolls = []; //number on resepective hexes
+var hexType = []; //city booleans resepective
+var hexRob = []; //robbed booleans respective
+var toPort = 0; //three:one port boolean
+var sheepPort = 0; //sheep port boolean
+var wheatPort = 0; //wheat port boolean
+var woodPort = 0; //wood port boolean
+var stonePort = 0; //stone port boolean
+var brickPort = 0; //brick port boolean
 var settlements = 1; //number of settlements
 var citiesOutOfPlay = 0; //number of cities
 var roadsOutOfPlay = 1; //number of roads
@@ -29,38 +29,31 @@ var theyGet = ""; //trade output
 var largestArmyGain = "no"; //player has largest army yes/no
 var longestRoadGain = "no"; //player has longest road yes/no
 var settlementPossible = "no"; //player can build a settlement yes/no
-var addSheepBar0 = 1;
-var addWheatBar0 = 1;
-var addWoodBar0 = 1;
-var addStoneBar0 = 1;
-var addBrickBar0 = 1;
 var monopolyBar0 = 0; //number of cards from monopoly
 var monopolyBar1 = ""; //type of card from monopoly
 var monopolyBar2 = []; //array of all cards from monopoly
-var turnBar1 = 0;
-var turnBar2 = 0;
-var cityBar0 = 0;
-var probation = 0;
-var mobbedBar0 = "";
-var tradeInBar2 = "";
-var keep0 = "";
-var keep1 = "";
-var keep2 = "";
-var keep3 = "";
-var keep4 = "";
-var hexBar0 = 0;
-var hexBar1 = "";
-var hexBar2 = 0;
-var hexBar3 = 0;
+var turnBar1 = 0; //have already rolled dice that turn boolean
+var turnBar2 = 0; //do not attempt trade again if rejected that turn
+var cityBar0 = 0; //to make city building announcement stay on the screen, since the function is outside of startTurn()
+var probation = 0; //if yes, cannot use development card on that turn
+var mobbedBar0 = ""; //resource being taken from player in monopoly
+var tradeInBar2 = ""; //resource being traded in x4 in startTurn()
+var keep0 = ""; //keep this card
+var keep1 = ""; //keep this card
+var keep2 = ""; //keep this card
+var keep3 = ""; //keep this card
+var keep4 = ""; //keep this card
+var hexBar0 = 0; //number to add to hex
+var hexBar1 = ""; //resource to add to hex
 function resetFoo() {
     foo.innerHTML = '<button onclick="startTurn();">START TURN</button><button onclick="addCard();">ADD CARD</button><button onclick="loseCard();">LOSE CARD</button><button onclick="listHex();">HEXES</button><button onclick="listPorts();">PORTS</button><button onclick="trade();">TRADE</button><button onclick="settlement();">SETTLEMENT POSSIBLE: ' + settlementPossible.toUpperCase() + '</button><button onclick="largestArmy();">LARGEST ARMY: ' + largestArmyGain.toUpperCase() + ' (' + knightsOutOfPlay + ')</button><button onclick="longestRoad();">LONGEST ROAD: ' + longestRoadGain.toUpperCase() + '</button><p>CARDS: ' + hand.length + '</p>';
-    document.getElementById("endGame").innerHTML = '<button onclick="endGame();">END GAME</button>';
-    turnBar1 = 0;
-    keep0 = "";
-    keep1 = "";
-    keep2 = "";
-    keep3 = "";
-    keep4 = "";
+    document.getElementById("endGame").innerHTML = '<button onclick="endGame();">END GAME</button>'; //if returning from endgame screen
+    turnBar1 = 0; //allow dice to roll next turn
+    keep0 = ""; //reset for neatness
+    keep1 = ""; //reset for neatness
+    keep2 = ""; //reset for neatness
+    keep3 = ""; //reset for neatness
+    keep4 = ""; //reset for neatness
 } //reset body to default
 function resetMonopoly() {
     while (monopolyBar2.length < monopolyBar0) {
@@ -93,7 +86,7 @@ function buildCity() {
                         settlements -= 1; //remove a settlement
                         citiesOutOfPlay += 1; //add a city
                         foo.innerHTML = "<p>BUILD A CITY</p><button onclick=\"startTurn();\">NEXT</button><button onclick='resetFoo();'>RETURN</button>";
-                        cityBar0 = 1;
+                        cityBar0 = 1; //stay on text since it is outside of startTurn()
                     } //test for a wheat
                 } //test for a wheat
             } //test for a stone
@@ -131,54 +124,54 @@ function endGame() {
     document.getElementById("endGame").innerHTML = '<button onclick="resetFoo();">RETURN</button>';
 }
 function needCard() {
-    bar0 = 0;
-    bar1 = "";
-    bar2 = 0;
-    bar3 = 0;
-    bar4 = 0;
-    bar5 = 0;
+    bar0 = 0; //number of cards out of necessary
+    bar1 = ""; //card needed
+    bar2 = 0; //counting stone
+    bar3 = 0; //counting stone
+    bar4 = 0; //counting stone
+    bar5 = 0; //counting wheat
     if (hand.includes("stone")) {
-        bar0 += 1;
-        bar2 = hand.indexOf("stone") + 1;
-        keep0 = "stone";
-    }
+        bar0 += 1; //have one necessary card
+        bar2 = hand.indexOf("stone") + 1; //counting stone
+        keep0 = "stone"; //keep this card
+    } //counting stone
     if (hand.includes("stone", bar2)) {
-        bar0 += 1;
-        bar3 = hand.indexOf("stone", bar2) + 1;
-        keep1 = "stone";
-    }
+        bar0 += 1; //have one necessary card
+        bar3 = hand.indexOf("stone", bar2) + 1; //counting stone
+        keep1 = "stone"; //keep this card
+    } //counting stone
     if (hand.includes("stone", bar3)) {
-        bar0 += 1;
-        bar4 = hand.indexOf("stone", bar3) + 1;
-        keep2 = "stone";
-    }
+        bar0 += 1; //have one necessary card
+        bar4 = hand.indexOf("stone", bar3) + 1; //counting stone
+        keep2 = "stone"; //keep this card
+    } //counting stone
     else {
-        bar1 = "stone";
-    }
+        bar1 = "stone"; //need stone
+    } //need stone
     if (hand.includes("wheat")) {
-        bar0 += 1;
-        bar5 = hand.indexOf("wheat") + 1;
-        keep3 = "wheat";
-    }
+        bar0 += 1; //have one necessary card
+        bar5 = hand.indexOf("wheat") + 1; //counting wheat
+        keep3 = "wheat"; //keep this card
+    } //counting wheat
     if (hand.includes("wheat", bar5)) {
-        bar0 += 1;
-        keep4 = "wheat";
-    }
+        bar0 += 1; //have one necessary card
+        keep4 = "wheat"; //keep this card
+    } //counting wheat
     else {
-        bar1 = "wheat";
-    }
+        bar1 = "wheat"; //need wheat
+    } //need wheat
     if (bar0 == 4 && settlements > 0) {
-        return bar1;
-    }
+        return bar1; //need this card
+    } //4 out of 5 cards
     else if (bar0 == 5 && settlements > 0) {
-        return;
-    }
-    bar0 = 0;
-    keep0 = "";
-    keep1 = "";
-    keep2 = "";
-    keep3 = "";
-    keep4 = "";
+        return; //keep all cards
+    } //5 out of 5 cards
+    bar0 = 0; //number of cards out of necessary
+    keep0 = ""; //reset for neatness
+    keep1 = ""; //reset for neatness
+    keep2 = ""; //reset for neatness
+    keep3 = ""; //reset for neatness
+    keep4 = ""; //reset for neatness
     if (hand.includes("wheat")) {
         bar0 += 1;
         keep0 = "wheat";
@@ -213,12 +206,12 @@ function needCard() {
     else if (bar0 == 4 && settlementPossible == "yes") {
         return;
     }
-    bar0 = 0;
-    keep0 = "";
-    keep1 = "";
-    keep2 = "";
-    keep3 = "";
-    keep4 = "";
+    bar0 = 0; //number of cards out of necessary
+    keep0 = ""; //reset for neatness
+    keep1 = ""; //reset for neatness
+    keep2 = ""; //reset for neatness
+    keep3 = ""; //reset for neatness
+    keep4 = ""; //reset for neatness
     if (hand.includes("brick")) {
         bar0 += 1;
         keep0 = "brick";
@@ -239,12 +232,12 @@ function needCard() {
     else if (bar0 == 2 && settlementPossible == "no") {
         return;
     }
-    bar0 = 0;
-    keep0 = "";
-    keep1 = "";
-    keep2 = "";
-    keep3 = "";
-    keep4 = "";
+    bar0 = 0; //number of cards out of necessary
+    keep0 = ""; //reset for neatness
+    keep1 = ""; //reset for neatness
+    keep2 = ""; //reset for neatness
+    keep3 = ""; //reset for neatness
+    keep4 = ""; //reset for neatness
     if (hand.includes("wheat")) {
         bar0 += 1;
         keep0 = "wheat";
@@ -272,12 +265,12 @@ function needCard() {
     else if (bar0 == 3) {
         return;
     }
-    bar0 = 0;
-    keep0 = "";
-    keep1 = "";
-    keep2 = "";
-    keep3 = "";
-    keep4 = "";
+    bar0 = 0; //number of cards out of necessary
+    keep0 = ""; //reset for neatness
+    keep1 = ""; //reset for neatness
+    keep2 = ""; //reset for neatness
+    keep3 = ""; //reset for neatness
+    keep4 = ""; //reset for neatness
 }
 function keepCard(card) {
     return card == keep0 || card == keep1 || card == keep2 || card == keep3 || card == keep4;
@@ -370,17 +363,269 @@ function startTurn() {
                 yearOfPlentyOutOfPlay += 1; //expend a year of plenty card
                 return;
             } //use a year of plenty card
+        } //play development cards
+        needCard();
+        bar13 = needCard(); //card you want
+        bar1 = 0; //number of card type in hand
+        tradeInBar2 = ""; //material to trade in
+        bar3 = 0; //number of card type to give back if less than 4
+        bar4 = ""; //random card if none needed
+        bar12 = 0; //stop for loop
+        bar14 = 0; //2ports can use boolean
+        if (sheepPort == 1) {
+            if (bar13 != "sheep") {
+                while (hand.includes("sheep") && bar3 < 2) {
+                    bar1 += 1;
+                    hand.splice(hand.indexOf("sheep"), 1);
+                    bar3 += 1;
+                }
+                if (bar1 < 2) {
+                    bar1 = 0;
+                    while (bar3 > 0) {
+                        hand.push("sheep");
+                        bar3 -= 1;
+                    }
+                }
+                else {
+                    bar14 = 1;
+                }
+            }
+            if (!bar13 && bar14 == 1) {
+                do {
+                    bar4 = materials[Math.floor(Math.random() * materials.length)];
+                }
+                while (bar4 == "sheep");
+                hand.push(bar4);
+                foo.innerHTML = '<p>TRADE IN 2 SHEEP FOR ' + bar4.toUpperCase() + '</p><button onclick=\"startTurn();\">NEXT</button><button onclick="resetFoo();">RETURN</button>';
+                return;
+            }
+            else if (bar13 && bar14 == 1) {
+                hand.push(bar13);
+                foo.innerHTML = '<p>TRADE IN 2 SHEEP FOR ' + bar13.toUpperCase() + '</p><button onclick=\"startTurn();\">NEXT</button><button onclick="resetFoo();">RETURN</button>';
+                return;
+            }
         }
         needCard();
-        bar13 = needCard();
-        bar1 = 0;
-        tradeInBar2 = "";
-        bar3 = 0;
-        bar4 = "";
-        bar12 = 0;
+        bar13 = needCard(); //card you want
+        bar1 = 0; //number of card type in hand
+        tradeInBar2 = ""; //material to trade in
+        bar3 = 0; //number of card type to give back if less than 4
+        bar4 = ""; //random card if none needed
+        bar12 = 0; //stop for loop
+        bar14 = 0; //2ports can use boolean
+        if (wheatPort == 1) {
+            if (bar13 != "wheat") {
+                while (hand.includes("wheat") && bar3 < 2) {
+                    bar1 += 1;
+                    hand.splice(hand.indexOf("wheat"), 1);
+                    bar3 += 1;
+                }
+                if (bar1 < 2) {
+                    bar1 = 0;
+                    while (bar3 > 0) {
+                        hand.push("wheat");
+                        bar3 -= 1;
+                    }
+                }
+                else {
+                    bar14 = 1;
+                }
+            }
+            if (!bar13 && bar14 == 1) {
+                do {
+                    bar4 = materials[Math.floor(Math.random() * materials.length)];
+                }
+                while (bar4 == "wheat");
+                hand.push(bar4);
+                foo.innerHTML = '<p>TRADE IN 2 WHEAT FOR ' + bar4.toUpperCase() + '</p><button onclick=\"startTurn();\">NEXT</button><button onclick="resetFoo();">RETURN</button>';
+                return;
+            }
+            else if (bar13 && bar14 == 1) {
+                hand.push(bar13);
+                foo.innerHTML = '<p>TRADE IN 2 WHEAT FOR ' + bar13.toUpperCase() + '</p><button onclick=\"startTurn();\">NEXT</button><button onclick="resetFoo();">RETURN</button>';
+                return;
+            }
+        }
+        needCard();
+        bar13 = needCard(); //card you want
+        bar1 = 0; //number of card type in hand
+        tradeInBar2 = ""; //material to trade in
+        bar3 = 0; //number of card type to give back if less than 4
+        bar4 = ""; //random card if none needed
+        bar12 = 0; //stop for loop
+        bar14 = 0; //2ports can use boolean
+        if (woodPort == 1) {
+            if (bar13 != "wood") {
+                while (hand.includes("wood") && bar3 < 2) {
+                    bar1 += 1;
+                    hand.splice(hand.indexOf("wood"), 1);
+                    bar3 += 1;
+                }
+                if (bar1 < 2) {
+                    bar1 = 0;
+                    while (bar3 > 0) {
+                        hand.push("wood");
+                        bar3 -= 1;
+                    }
+                }
+                else {
+                    bar14 = 1;
+                }
+            }
+            if (!bar13 && bar14 == 1) {
+                do {
+                    bar4 = materials[Math.floor(Math.random() * materials.length)];
+                }
+                while (bar4 == "wood");
+                hand.push(bar4);
+                foo.innerHTML = '<p>TRADE IN 2 WOOD FOR ' + bar4.toUpperCase() + '</p><button onclick=\"startTurn();\">NEXT</button><button onclick="resetFoo();">RETURN</button>';
+                return;
+            }
+            else if (bar13 && bar14 == 1) {
+                hand.push(bar13);
+                foo.innerHTML = '<p>TRADE IN 2 WOOD FOR ' + bar13.toUpperCase() + '</p><button onclick=\"startTurn();\">NEXT</button><button onclick="resetFoo();">RETURN</button>';
+                return;
+            }
+        }
+        needCard();
+        bar13 = needCard(); //card you want
+        bar1 = 0; //number of card type in hand
+        tradeInBar2 = ""; //material to trade in
+        bar3 = 0; //number of card type to give back if less than 4
+        bar4 = ""; //random card if none needed
+        bar12 = 0; //stop for loop
+        bar14 = 0; //2ports can use boolean
+        if (stonePort == 1) {
+            if (bar13 != "stone") {
+                while (hand.includes("stone") && bar3 < 2) {
+                    bar1 += 1;
+                    hand.splice(hand.indexOf("stone"), 1);
+                    bar3 += 1;
+                }
+                if (bar1 < 2) {
+                    bar1 = 0;
+                    while (bar3 > 0) {
+                        hand.push("stone");
+                        bar3 -= 1;
+                    }
+                }
+                else {
+                    bar14 = 1;
+                }
+            }
+            if (!bar13 && bar14 == 1) {
+                do {
+                    bar4 = materials[Math.floor(Math.random() * materials.length)];
+                }
+                while (bar4 == "stone");
+                hand.push(bar4);
+                foo.innerHTML = '<p>TRADE IN 2 STONE FOR ' + bar4.toUpperCase() + '</p><button onclick=\"startTurn();\">NEXT</button><button onclick="resetFoo();">RETURN</button>';
+                return;
+            }
+            else if (bar13 && bar14 == 1) {
+                hand.push(bar13);
+                foo.innerHTML = '<p>TRADE IN 2 STONE FOR ' + bar13.toUpperCase() + '</p><button onclick=\"startTurn();\">NEXT</button><button onclick="resetFoo();">RETURN</button>';
+                return;
+            }
+        }
+        needCard();
+        bar13 = needCard(); //card you want
+        bar1 = 0; //number of card type in hand
+        tradeInBar2 = ""; //material to trade in
+        bar3 = 0; //number of card type to give back if less than 4
+        bar4 = ""; //random card if none needed
+        bar12 = 0; //stop for loop
+        bar14 = 0; //2ports can use boolean
+        if (brickPort == 1) {
+            if (bar13 != "brick") {
+                while (hand.includes("brick") && bar3 < 2) {
+                    bar1 += 1;
+                    hand.splice(hand.indexOf("brick"), 1);
+                    bar3 += 1;
+                }
+                if (bar1 < 2) {
+                    bar1 = 0;
+                    while (bar3 > 0) {
+                        hand.push("brick");
+                        bar3 -= 1;
+                    }
+                }
+                else {
+                    bar14 = 1;
+                }
+            }
+            if (!bar13 && bar14 == 1) {
+                do {
+                    bar4 = materials[Math.floor(Math.random() * materials.length)];
+                }
+                while (bar4 == "brick");
+                hand.push(bar4);
+                foo.innerHTML = '<p>TRADE IN 2 BRICK FOR ' + bar4.toUpperCase() + '</p><button onclick=\"startTurn();\">NEXT</button><button onclick="resetFoo();">RETURN</button>';
+                return;
+            }
+            else if (bar13 && bar14 == 1) {
+                hand.push(bar13);
+                foo.innerHTML = '<p>TRADE IN 2 BRICK FOR ' + bar13.toUpperCase() + '</p><button onclick=\"startTurn();\">NEXT</button><button onclick="resetFoo();">RETURN</button>';
+                return;
+            }
+        }
+        needCard();
+        bar13 = needCard(); //card you want
+        bar1 = 0; //number of card type in hand
+        tradeInBar2 = ""; //material to trade in
+        bar3 = 0; //number of card type to give back if less than 4
+        bar4 = ""; //random card if none needed
+        bar12 = 0; //stop for loop
+        if (toPort == 1) {
+            for (i = 0; i < materials.length && bar12 == 0; i++) {
+                bar0 = materials[i];
+                if (bar0 != bar13) {
+                    while (hand.includes(bar0) && bar3 < 3) {
+                        bar1 += 1;
+                        hand.splice(hand.indexOf(bar0), 1);
+                        bar3 += 1;
+                    }
+                    if (bar1 < 3) {
+                        bar1 = 0;
+                        while (bar3 > 0) {
+                            hand.push(bar0);
+                            bar3 -= 1;
+                        }
+                    }
+                    else {
+                        tradeInBar2 = materials[i];
+                        bar12 = 1;
+                        break;
+                    }
+                }
+            }
+            if (tradeInBar2 != "") {
+                if (!bar13) {
+                    do {
+                        bar4 = materials[Math.floor(Math.random() * materials.length)];
+                    }
+                    while (bar4 == tradeInBar2);
+                    hand.push(bar4);
+                    foo.innerHTML = '<p>TRADE IN 3 ' + tradeInBar2.toUpperCase() + ' FOR ' + bar4.toUpperCase() + '</p><button onclick=\"startTurn();\">NEXT</button><button onclick="resetFoo();">RETURN</button>';
+                    return;
+                }
+                else if (bar13) {
+                    hand.push(bar13);
+                    foo.innerHTML = '<p>TRADE IN 3 ' + tradeInBar2.toUpperCase() + ' FOR ' + bar13.toUpperCase() + '</p><button onclick=\"startTurn();\">NEXT</button><button onclick="resetFoo();">RETURN</button>';
+                    return;
+                }
+            }
+        }
+        needCard();
+        bar13 = needCard(); //card you want
+        bar1 = 0; //number of card type in hand
+        tradeInBar2 = ""; //material to trade in
+        bar3 = 0; //number of card type to give back if less than 4
+        bar4 = ""; //random card if none needed
+        bar12 = 0; //stop for loop
         for (i = 0; i < materials.length && bar12 == 0; i++) {
             bar0 = materials[i];
-            if (bar0 != bar13 && keepCard(bar0) == false) {
+            if (bar0 != bar13) {
                 while (hand.includes(bar0) && bar3 < 4) {
                     bar1 += 1;
                     hand.splice(hand.indexOf(bar0), 1);
@@ -401,7 +646,6 @@ function startTurn() {
             }
         }
         if (tradeInBar2 != "") {
-            turnBar3 = 1;
             if (!bar13) {
                 do {
                     bar4 = materials[Math.floor(Math.random() * materials.length)];
@@ -411,7 +655,7 @@ function startTurn() {
                 foo.innerHTML = '<p>TRADE IN 4 ' + tradeInBar2.toUpperCase() + ' FOR ' + bar4.toUpperCase() + '</p><button onclick=\"startTurn();\">NEXT</button><button onclick="resetFoo();">RETURN</button>';
                 return;
             }
-            else if (bar13 && bar13 != tradeInBar2 && tradeInBar2 != keep0 && tradeInBar2 != keep1 && tradeInBar2 != keep2 && tradeInBar2 != keep3 && tradeInBar2 != keep4) {
+            else if (bar13) {
                 hand.push(bar13);
                 foo.innerHTML = '<p>TRADE IN 4 ' + tradeInBar2.toUpperCase() + ' FOR ' + bar13.toUpperCase() + '</p><button onclick=\"startTurn();\">NEXT</button><button onclick="resetFoo();">RETURN</button>';
                 return;
