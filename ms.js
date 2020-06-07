@@ -47,7 +47,7 @@ function win() {
     }
 }
 function flag(i) {
-    if (l === 0) {
+    if (l === 0 && grid[i] !== 2) {
         const space = document.getElementById("space" + i);
         if (flags[i] === 0) {
             flags[i] = 1;
