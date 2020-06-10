@@ -51,7 +51,7 @@ function flag(i) {
         const space = document.getElementById("space" + i);
         if (flags[i] === 0) {
             flags[i] = 1;
-            space.innerHTML = "F";
+            space.innerHTML = "&#128681;";
         } else if (flags[i] === 1) {
             flags[i] = 0;
             space.innerHTML = "/";
@@ -67,7 +67,7 @@ function uncover(i) {
             document.getElementsByTagName("TABLE")[0].insertAdjacentHTML("beforebegin", "<p>YOU LOSE</p>")
             for (let j = 1; j <= size * size; j++) {
                 if (grid[j] === 1 || grid[j] === 4) {
-                    document.getElementById("space" + j).innerHTML = "B";
+                    document.getElementById("space" + j).innerHTML = "&#128169;";
                 }
             }
             l = 1;
