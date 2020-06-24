@@ -5,10 +5,15 @@ var size = 25;
 var k = 1;
 const flags = [];
 const game = document.getElementById("game");
+const watch = document.getElementById("watch");
 const winLose = document.getElementById("winLose");
 var l = 0;
 var m = 0;
+var watchStart;
+var watchInt;
 function start() {
+    watchStart = Date.now();
+    watchInt = setInterval(function () { var watchNow = Date.now(); var watchHr = Math.floor((watchNow - watchStart) / 3600000); var watchMin = (Math.floor((watchNow - watchStart) / 60000) % 60); var watchSec = (Math.floor((watchNow - watchStart) / 1000) % 60); var watchMil = watchNow % 1000; watch.innerHTML = ((watchHr >= 10) ? watchHr : '0' + watchHr) + ':' + ((watchMin >= 10) ? watchMin : '0' + watchMin) + ':' + ((watchSec >= 10) ? watchSec : '0' + watchSec) + '.' + ((watchMil >= 10) ? ((watchMil >= 100) ? watchMil : '0' + watchMil) : '00' + watchMil); }, 1);
     winLose.innerHTML = "<br>";
     str = '<table style="width:' + (22.4 * size) + 'px">';
     k = 1;
@@ -38,7 +43,7 @@ function start() {
 }
 function win() {
     if (k + m - 1 === size * size) {
-        console.log(0);
+        clearInterval(watchInt);
         winLose.innerHTML = "YOU WIN";
         for (let j = 1; j <= size * size; j++) {
             if (grid[j] === 1) {
@@ -66,6 +71,7 @@ function uncover(i) {
     if (grid[i] !== 2 && flags[i] === 0 && l === 0) {
         k++;
         if (grid[i] === 1) {
+            clearInterval(watchInt);
             winLose.innerHTML = "YOU LOSE";
             for (let j = 1; j <= size * size; j++) {
                 if (grid[j] === 1 || grid[j] === 4) {
