@@ -1,21 +1,23 @@
 "use strict";
 const grid = [null];
 var str;
-var size = 50;
+var size = 25;
 var k = 1;
 const flags = [];
 const game = document.getElementById("game");
+const winLose = document.getElementById("winLose");
 var l = 0;
 var m = 0;
 function start() {
-    str = '<table style="width:' + (24 * size) + 'px">';
+    winLose.innerHTML = "<br>";
+    str = '<table style="width:' + (22.4 * size) + 'px">';
     k = 1;
     l = 0;
     m = 0;
     for (let i = 1; i <= size * size; i++) {
         grid[i] = 0;
         flags[i] = 0;
-        str += '<td id="space' + i + '" onclick="uncover(' + i + ')" oncontextmenu="flag(' + i + ');return false">/</td>';
+        str += '<td id="space' + i + '" onclick="uncover(' + i + ')" oncontextmenu="flag(' + i + ');return false"><img src="mscover.png"></td>';
         if (i % size === 0) {
             for (let j = 0; j <= size; j++) {
                 if (size * j === i) {
@@ -35,12 +37,12 @@ function start() {
     }
 }
 function win() {
-    if (k + m === size * size) {
+    if (k + m - 1 === size * size) {
         console.log(0);
-        document.getElementsByTagName("TABLE")[0].insertAdjacentHTML("beforebegin", "<p>YOU WIN</p><br>");
+        winLose.innerHTML = "YOU WIN";
         for (let j = 1; j <= size * size; j++) {
             if (grid[j] === 1) {
-                document.getElementById("space" + j).innerHTML = "B";
+                document.getElementById("space" + j).innerHTML = "<img src='msbomb.png'></img>";
             }
         }
         l = 1;
@@ -51,10 +53,10 @@ function flag(i) {
         const space = document.getElementById("space" + i);
         if (flags[i] === 0) {
             flags[i] = 1;
-            space.innerHTML = "&#128681;";
+            space.innerHTML = "<img src='msflag.png'>";
         } else if (flags[i] === 1) {
             flags[i] = 0;
-            space.innerHTML = "/";
+            space.innerHTML = "<img src='mscover.png'>";
         }
     }
 }
@@ -64,10 +66,10 @@ function uncover(i) {
     if (grid[i] !== 2 && flags[i] === 0 && l === 0) {
         k++;
         if (grid[i] === 1) {
-            document.getElementsByTagName("TABLE")[0].insertAdjacentHTML("beforebegin", "<p>YOU LOSE</p>")
+            winLose.innerHTML = "YOU LOSE";
             for (let j = 1; j <= size * size; j++) {
                 if (grid[j] === 1 || grid[j] === 4) {
-                    document.getElementById("space" + j).innerHTML = "&#128169;";
+                    document.getElementById("space" + j).innerHTML = "<img src='msbomb.png'>";
                 }
             }
             l = 1;
@@ -87,10 +89,8 @@ function uncover(i) {
                 uncover(i + 1);
                 uncover(i + size);
                 uncover(i + size + 1);
-                space.innerHTML = " ";
-            } else {
-                space.innerHTML = h;
             }
+            space.innerHTML = "<img src='ms" + h + ".png'>";
             grid[i] = 2;
             space.style.backgroundColor = "white";
             win();
@@ -110,10 +110,8 @@ function uncover(i) {
                 uncover(i - 1);
                 uncover(i + size);
                 uncover(i + size - 1);
-                space.innerHTML = " ";
-            } else {
-                space.innerHTML = h;
             }
+            space.innerHTML = "<img src='ms" + h + ".png'>";
             grid[i] = 2;
             space.style.backgroundColor = "white";
             win();
@@ -133,10 +131,8 @@ function uncover(i) {
                 uncover(i + 1);
                 uncover(i - size);
                 uncover(i - size + 1);
-                space.innerHTML = " ";
-            } else {
-                space.innerHTML = h;
             }
+            space.innerHTML = "<img src='ms" + h + ".png'>";
             grid[i] = 2;
             space.style.backgroundColor = "white";
             win();
@@ -156,10 +152,8 @@ function uncover(i) {
                 uncover(i - 1);
                 uncover(i - size);
                 uncover(i - size - 1);
-                space.innerHTML = " ";
-            } else {
-                space.innerHTML = h;
             }
+            space.innerHTML = "<img src='ms" + h + ".png'>";
             grid[i] = 2;
             space.style.backgroundColor = "white";
             win();
@@ -187,10 +181,8 @@ function uncover(i) {
                 uncover(i + 1);
                 uncover(i + size);
                 uncover(i + size + 1);
-                space.innerHTML = " ";
-            } else {
-                space.innerHTML = h;
             }
+            space.innerHTML = "<img src='ms" + h + ".png'>";
             grid[i] = 2;
             space.style.backgroundColor = "white";
             win();
@@ -218,10 +210,8 @@ function uncover(i) {
                 uncover(i - 1);
                 uncover(i + size);
                 uncover(i + size - 1);
-                space.innerHTML = " ";
-            } else {
-                space.innerHTML = h;
             }
+            space.innerHTML = "<img src='ms" + h + ".png'>";
             grid[i] = 2;
             space.style.backgroundColor = "white";
             win();
@@ -249,10 +239,8 @@ function uncover(i) {
                 uncover(i + size);
                 uncover(i + size - 1);
                 uncover(i + size + 1);
-                space.innerHTML = " ";
-            } else {
-                space.innerHTML = h;
             }
+            space.innerHTML = "<img src='ms" + h + ".png'>";
             grid[i] = 2;
             space.style.backgroundColor = "white";
             win();
@@ -280,10 +268,8 @@ function uncover(i) {
                 uncover(i - size + 1);
                 uncover(i - 1);
                 uncover(i + 1);
-                space.innerHTML = " ";
-            } else {
-                space.innerHTML = h;
             }
+            space.innerHTML = "<img src='ms" + h + ".png'>";
             grid[i] = 2;
             space.style.backgroundColor = "white";
             win();
@@ -323,14 +309,19 @@ function uncover(i) {
                 uncover(i + size);
                 uncover(i + size - 1);
                 uncover(i + size + 1);
-                space.innerHTML = " ";
-            } else {
-                space.innerHTML = h;
             }
+            space.innerHTML = "<img src='ms" + h + ".png'>";
             grid[i] = 2;
             space.style.backgroundColor = "white";
             win();
             return;
+        }
+    }
+}
+function autowin() {
+    for (let i = 0; i < grid.length; i++) {
+        if (grid[i] === 0) {
+            uncover(i);
         }
     }
 }

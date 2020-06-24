@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>Minesweeper</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="ms.js" defer></script>
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="icon.png">
@@ -24,13 +24,16 @@
             border-style: solid;
             width: 20px;
             height: 20px;
+            line-height: 0px;
             text-align: center;
+            font-size: 15px;
         }
     </style>
 </head>
 <body>
-    <input type="range" min="9" max="99" value="50" class="slider" id="sizeIn" oninput="document.getElementById('sizeOut').innerHTML = this.value; window.size = parseInt(this.value)">
-    <p id="sizeOut">50</p>
+    <input type="range" min="9" max="99" value="25" class="slider" id="sizeIn" oninput="document.getElementById('sizeOut').innerHTML = 'Board size: ' + this.value + 'x' + this.value; window.size = parseInt(this.value)">
+    <p id="sizeOut">Board size: 25x25</p>
+    <p id="winLose"><br /></p>
     <button onclick="start()">NEW GAME</button>
     <div id="game"></div>
 </body>
