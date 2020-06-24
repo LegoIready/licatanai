@@ -33,9 +33,13 @@
 <body>
     <input type="range" min="9" max="99" value="25" class="slider" id="sizeIn" oninput="document.getElementById('sizeOut').innerHTML = 'Board size: ' + this.value + 'x' + this.value; window.size = parseInt(this.value)">
     <p id="sizeOut">Board size: 25x25</p>
+    <p>Board ID (save this to play this board multiple times): </p>
+    <input id="boardId" />
     <p id="watch">00:00:00.000</p>
     <p id="winLose"><br /></p>
-    <button onclick="start()">NEW GAME</button>
+    <button onclick="loadGame()">LOAD GAME (paste a board ID below)</button><br />
+    <input id="loadBoard" /><br />
+    <button onclick="start()">NEW GAME (generate a new board)</button>
     <div id="game"></div>
 </body>
 </html>

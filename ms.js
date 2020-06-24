@@ -40,6 +40,14 @@ function start() {
             m++;
         }
     }
+    document.getElementById("boardId").value = btoa(btoa(grid));
+}
+function loadGame() {
+    start();
+    var j = atob(atob(document.getElementById("loadBoard").value)).split(',');
+    for (let i = 1; i < j.length; i++) {
+        grid[i] = parseInt(j[i]);
+    }
 }
 function win() {
     if (k + m - 1 === size * size) {
