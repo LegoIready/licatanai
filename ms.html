@@ -10,14 +10,16 @@
         * {
             margin: 0;
             padding: 0;
+        }
+        :not(input) {
             -webkit-user-select: none;
             -moz-user-select: none;
             -ms-user-select: none;
             user-select: none;
-            table-layout: fixed;
         }
         table {
             border-collapse: collapse;
+            table-layout: fixed;
         }
         td {
             background-color: darkgrey;
@@ -37,9 +39,9 @@
     <input id="boardId" />
     <p id="watch">00:00:00.000</p>
     <p id="winLose"><br /></p>
-    <button onclick="loadGame()">LOAD GAME (paste a board ID below)</button><br />
+    <button onclick="start(1)">LOAD GAME (paste a board ID below)</button><br />
     <input id="loadBoard" /><br />
-    <button onclick="start()">NEW GAME (generate a new board)</button>
+    <button onclick="start(0)">NEW GAME (generate a new board)</button>
     <div id="game"></div>
 </body>
 </html>

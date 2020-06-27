@@ -11,11 +11,11 @@ var l = 0;
 var m = 0;
 var watchStart;
 var watchInt;
-function start() {
+function start(man) {
     watchStart = Date.now();
     watchInt = setInterval(function () { var watchNow = Date.now(); var watchHr = Math.floor((watchNow - watchStart) / 3600000); var watchMin = (Math.floor((watchNow - watchStart) / 60000) % 60); var watchSec = (Math.floor((watchNow - watchStart) / 1000) % 60); var watchMil = watchNow % 1000; watch.innerHTML = ((watchHr >= 10) ? watchHr : '0' + watchHr) + ':' + ((watchMin >= 10) ? watchMin : '0' + watchMin) + ':' + ((watchSec >= 10) ? watchSec : '0' + watchSec) + '.' + ((watchMil >= 10) ? ((watchMil >= 100) ? watchMil : '0' + watchMil) : '00' + watchMil); }, 1);
     winLose.innerHTML = "<br>";
-    str = '<table style="width:' + (22.4 * size) + 'px">';
+    str = '<table style="width:' + (22.4 * size) + 'px"><tbody>';
     k = 1;
     l = 0;
     m = 0;
@@ -31,7 +31,7 @@ function start() {
             }
         }
     }
-    game.innerHTML = (str + '</tr></table>');
+    game.innerHTML = (str + '</tr></tbody></table>');
     for (let i = 0; i <= (size * size) / 6;) {
         let j = Math.floor(Math.random() * (size * size));
         if (grid[j] === 0) {
@@ -40,13 +40,12 @@ function start() {
             m++;
         }
     }
-    document.getElementById("boardId").value = btoa(btoa(grid));
-}
-function loadGame() {
-    start();
-    var j = atob(atob(document.getElementById("loadBoard").value)).split(',');
-    for (let i = 1; i < j.length; i++) {
-        grid[i] = parseInt(j[i]);
+    document.getElementById("boardId").value = btoa(grid);
+    if (man === 1) {
+        var j = atob(document.getElementById("loadBoard").value).split(',');
+        for (let i = 1; i < j.length; i++) {
+            grid[i] = parseInt(j[i]);
+        }
     }
 }
 function win() {
