@@ -10,6 +10,7 @@
         * {
             margin: 0;
             padding: 0;
+            text-align: center;
         }
         :not(input) {
             -webkit-user-select: none;
@@ -20,28 +21,35 @@
         table {
             border-collapse: collapse;
             table-layout: fixed;
+            margin-left: auto;
+            margin-right: auto;
         }
         td {
-            background-color: darkgrey;
             border-style: solid;
             width: 20px;
             height: 20px;
             line-height: 0px;
-            text-align: center;
             font-size: 15px;
         }
     </style>
 </head>
 <body>
-    <input type="range" min="9" max="99" value="25" class="slider" id="sizeIn" oninput="document.getElementById('sizeOut').innerHTML = 'Board size: ' + this.value + 'x' + this.value; window.size = parseInt(this.value)">
-    <p id="sizeOut">Board size: 25x25</p>
-    <p>Board ID (save this to play this board multiple times): </p>
+    <input type="range" min="9" max="99" value="25" class="slider" id="sizeIn" oninput="document.getElementById('sizeOut0').value = this.value;document.getElementById('sizeOut1').value = this.value; window.size = parseInt(this.value)">
+    <br />
+    <p style="display:inline">Board size: </p>
+    <input id="sizeOut0" value="25" style="width:20px;display:inline" oninput="document.getElementById('sizeIn').value = this.value; document.getElementById('sizeOut1').value = this.value; if (this.value < 9) { window.size = 9 } else if (this.value > 99) { window.size = 99 } else { window.size = parseInt(this.value) }" onchange="if (this.value < 9) { this.value = 9 } else if (this.value > 99) { this.value = 99 }; document.getElementById('sizeIn').value = this.value; document.getElementById('sizeOut1').value = this.value;" />
+    <p style="display:inline">x</p>
+    <input id="sizeOut1" value="25" style="width:20px;display:inline" oninput="document.getElementById('sizeIn').value = this.value; document.getElementById('sizeOut0').value = this.value; if (this.value < 9) { window.size = 9 } else if (this.value > 99) { window.size = 99 } else { window.size = parseInt(this.value) }" onchange="if (this.value < 9) { this.value = 9 } else if (this.value > 99) { this.value = 99 }; document.getElementById('sizeIn').value = this.value; document.getElementById('sizeOut0').value = this.value;" />
+    <br />
     <input id="boardId" />
+    <button onclick="document.getElementById('boardId').value = btoa(size + ',' + ((l===0) ? (Date.now() - watchStart) : watchOff) + ',' + k + ',' + l + ',' + m + ',' + grid + ',' + flags)">SAVE GAME</button>
+    <br />
+    <input id="loadBoard" />
+    <button onclick="start(1)">LOAD GAME</button>
+    <br />
+    <button onclick="start(0)">NEW GAME</button>
     <p id="watch">00:00:00.000</p>
     <p id="winLose"><br /></p>
-    <button onclick="start(1)">LOAD GAME (paste a board ID below)</button><br />
-    <input id="loadBoard" /><br />
-    <button onclick="start(0)">NEW GAME (generate a new board)</button>
     <div id="game"></div>
 </body>
 </html>
