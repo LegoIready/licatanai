@@ -8,12 +8,14 @@ const watch = document.getElementById("watch");
 const winLose = document.getElementById("winLose");
 var l = 0;
 var m = 0;
+var s = 0;
 var watchStart;
 var watchInt;
 var watchOff = 0;
 function start(man) {
     winLose.innerHTML = "<br>";
     watchOff = 0;
+    s = 0;
     switch (man) {
         case 0:
             k = 1;
@@ -119,8 +121,8 @@ function win() {
             }
         }
         l = 1;
-        var bar0 = `${size},${watch.innerHTML}`;
-        document.getElementById('lbscore').innerHTML = "<button onclick='document.getElementById(\"lbscoreframe\").removeAttribute(\"hidden\");this.setAttribute(\"hidden\",\"true\")'>SUBMIT SCORE</button><iframe style='width: 100vw; height: 20vw' frameborder='0' src='https://mslbord.legoiready.repl.co/?"+size+","+watch.innerHTML+"' id='lbscoreframe' hidden></iframe>";
+        //var bar0 = `${size},${watch.innerHTML}`;
+        //document.getElementById('lbscore').innerHTML = "<button onclick='document.getElementById(\"lbscoreframe\").removeAttribute(\"hidden\");this.setAttribute(\"hidden\",\"true\")'>SUBMIT SCORE</button><iframe style='width: 100vw; height: 20vw' frameborder='0' src='https://mslbord.legoiready.repl.co/?"+size+","+watch.innerHTML+"' id='lbscoreframe' hidden></iframe>";
     }
 }
 function flag(i) {
