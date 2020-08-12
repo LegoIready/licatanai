@@ -4,26 +4,27 @@
     <title>Minesweeper</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="ms.js" defer></script>
-    <link rel="manifest" href="manifest.json">
-    <link rel="apple-touch-icon" href="icon.png">
     <style>
         * {
             margin: 0;
             padding: 0;
             text-align: center;
         }
+
         :not(input) {
             -webkit-user-select: none;
             -moz-user-select: none;
             -ms-user-select: none;
             user-select: none;
         }
+
         table {
             border-collapse: collapse;
             table-layout: fixed;
             margin-left: auto;
             margin-right: auto;
         }
+
         td {
             border-style: solid;
             width: 20px;
@@ -34,12 +35,15 @@
     </style>
 </head>
 <body>
-    <input type="range" min="9" max="99" value="25" class="slider" id="sizeIn" oninput="document.getElementById('sizeOut0').value = this.value;document.getElementById('sizeOut1').value = this.value; window.size = parseInt(this.value)">
+    <div id="lbscore"></div>
+    <button onclick="let bishop7 = document.getElementById('leaderboard'); if (bishop7.hasAttribute('hidden')) { bishop7.removeAttribute('hidden'); } else { bishop7.setAttribute('hidden', 'true'); }">LEADERBOARD</button><br />
+    <iframe style="width:100vw;height:20vw" frameborder="0" id="leaderboard" src="https://mslbord.legoiready.repl.co/?25" hidden></iframe>
+    <input type="range" min="9" max="99" value="25" class="slider" id="sizeIn" oninput="document.getElementById('sizeOut0').value = this.value; document.getElementById('sizeOut1').value = this.value; window.size = parseInt(this.value); document.getElementById('leaderboard').src = 'https://mslbord.legoiready.repl.co/?'+this.value">
     <br />
     <p style="display:inline">Board size: </p>
-    <input id="sizeOut0" value="25" style="width:20px;display:inline" oninput="document.getElementById('sizeIn').value = this.value; document.getElementById('sizeOut1').value = this.value; if (this.value < 9) { window.size = 9 } else if (this.value > 99) { window.size = 99 } else { window.size = parseInt(this.value) }" onchange="if (this.value < 9) { this.value = 9 } else if (this.value > 99) { this.value = 99 }; document.getElementById('sizeIn').value = this.value; document.getElementById('sizeOut1').value = this.value;" />
+    <input id="sizeOut0" value="25" style="width:20px;display:inline" oninput="document.getElementById('sizeIn').value = this.value; document.getElementById('sizeOut1').value = this.value; if (this.value < 9) { window.size = 9 } else if (this.value > 99) { window.size = 99 } else { window.size = parseInt(this.value) }" onchange="if (this.value < 9) { this.value = 9 } else if (this.value > 99) { this.value = 99 }; document.getElementById('sizeIn').value = this.value; document.getElementById('sizeOut1').value = this.value;document.getElementById('leaderboard').src = 'https://mslbord.legoiready.repl.co/?'+this.value" />
     <p style="display:inline">x</p>
-    <input id="sizeOut1" value="25" style="width:20px;display:inline" oninput="document.getElementById('sizeIn').value = this.value; document.getElementById('sizeOut0').value = this.value; if (this.value < 9) { window.size = 9 } else if (this.value > 99) { window.size = 99 } else { window.size = parseInt(this.value) }" onchange="if (this.value < 9) { this.value = 9 } else if (this.value > 99) { this.value = 99 }; document.getElementById('sizeIn').value = this.value; document.getElementById('sizeOut0').value = this.value;" />
+    <input id="sizeOut1" value="25" style="width:20px;display:inline" oninput="document.getElementById('sizeIn').value = this.value; document.getElementById('sizeOut0').value = this.value; if (this.value < 9) { window.size = 9 } else if (this.value > 99) { window.size = 99 } else { window.size = parseInt(this.value) }" onchange="if (this.value < 9) { this.value = 9 } else if (this.value > 99) { this.value = 99 }; document.getElementById('sizeIn').value = this.value; document.getElementById('sizeOut0').value = this.value;document.getElementById('leaderboard').src = 'https://mslbord.legoiready.repl.co/?'+this.value" />
     <br />
     <input id="boardId" />
     <button onclick="document.getElementById('boardId').value = btoa(size + ',' + ((l===0) ? (Date.now() - watchStart) : watchOff) + ',' + k + ',' + l + ',' + m + ',' + grid + ',' + flags)">SAVE GAME</button>

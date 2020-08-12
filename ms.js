@@ -57,7 +57,7 @@ function start(man) {
             document.getElementById('sizeOut0').value = size;
             document.getElementById('sizeOut1').value = size;
             let s = size * size;
-            let str2 = '<table style="width:' + (22.4 * size) + 'px"><tbody>';
+            let str2 = '<table style="width:' + (22.4 * size) + 'px"><tbody><tr>';
             for (let i = 1; i <= s; i++) {
                 str2 += '<td id="space' + i + '" onclick="uncover(' + i + ')" oncontextmenu="flag(' + i + ');return false"><img src="mscover.png"></td>';
                 if (i % size === 0) {
@@ -119,6 +119,8 @@ function win() {
             }
         }
         l = 1;
+        var bar0 = `${size},${watch.innerHTML}`;
+        document.getElementById('lbscore').innerHTML = "<button onclick='document.getElementById(\"lbscoreframe\").removeAttribute(\"hidden\");this.setAttribute(\"hidden\",\"true\")'>SUBMIT SCORE</button><iframe style='width: 100vw; height: 20vw' frameborder='0' src='https://mslbord.legoiready.repl.co/?"+size+","+watch.innerHTML+"' id='lbscoreframe' hidden></iframe>";
     }
 }
 function flag(i) {
