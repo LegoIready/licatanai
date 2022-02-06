@@ -22,14 +22,29 @@ function start(man) {
             m = 0;
             let q = size * size;
             let str = '<table style="width:' + (22.4 * size) + 'px"><tbody>';
-            for (let i = 1; i <= q; i++) {
-                grid[i] = 0;
-                flags[i] = 0;
-                str += '<td id="space' + i + '" onclick="uncover(' + i + ')" oncontextmenu="flag(' + i + ');return false"><img src="mscover.png"></td>';
-                if (i % size === 0) {
-                    for (let j = 0; j <= size; j++) {
-                        if (size * j === i) {
-                            str += '</tr><tr>';
+            if (document.getElementById("movil").checked) {
+                for (let i = 1; i <= q; i++) {
+                    grid[i] = 0;
+                    flags[i] = 0;
+                    str += '<td id="space' + i + '" onclick="mobileFlag(' + i + ')"><img src="mscover.png"></td>';
+                    if (i % size === 0) {
+                        for (let j = 0; j <= size; j++) {
+                            if (size * j === i) {
+                                str += '</tr><tr>';
+                            }
+                        }
+                    }
+                }
+            } else {
+                for (let i = 1; i <= q; i++) {
+                    grid[i] = 0;
+                    flags[i] = 0;
+                    str += '<td id="space' + i + '" onclick="uncover(' + i + ')" oncontextmenu="flag(' + i + ');return false"><img src="mscover.png"></td>';
+                    if (i % size === 0) {
+                        for (let j = 0; j <= size; j++) {
+                            if (size * j === i) {
+                                str += '</tr><tr>';
+                            }
                         }
                     }
                 }
@@ -59,12 +74,25 @@ function start(man) {
             document.getElementById('sizeOut1').value = size;
             let s = size * size;
             let str2 = '<table style="width:' + (22.4 * size) + 'px"><tbody><tr>';
-            for (let i = 1; i <= s; i++) {
-                str2 += '<td id="space' + i + '" onclick="uncover(' + i + ')" oncontextmenu="flag(' + i + ');return false"><img src="mscover.png"></td>';
-                if (i % size === 0) {
-                    for (let j = 0; j <= size; j++) {
-                        if (size * j === i) {
-                            str2 += '</tr><tr>';
+            if (document.getElementById("movil").checked) {
+                for (let i = 1; i <= s; i++) {
+                    str2 += '<td id="space' + i + '" onclick="mobileFlag(' + i + ')"><img src="mscover.png"></td>';
+                    if (i % size === 0) {
+                        for (let j = 0; j <= size; j++) {
+                            if (size * j === i) {
+                                str2 += '</tr><tr>';
+                            }
+                        }
+                    }
+                }
+            } else {
+                for (let i = 1; i <= s; i++) {
+                    str2 += '<td id="space' + i + '" onclick="uncover(' + i + ')" oncontextmenu="flag(' + i + ');return false"><img src="mscover.png"></td>';
+                    if (i % size === 0) {
+                        for (let j = 0; j <= size; j++) {
+                            if (size * j === i) {
+                                str2 += '</tr><tr>';
+                            }
                         }
                     }
                 }
@@ -385,6 +413,14 @@ function uncover(i) {
             win();
             return;
         }
+    }
+}
+function mobileFlag(i) {
+    if (flags[i] == 0) {
+        flag(i);
+    } else if (flags[i] == 1) {
+        flag(i);
+        uncover(i);
     }
 }
 function autowin() {
